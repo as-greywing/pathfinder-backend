@@ -1,0 +1,19 @@
+{
+  "name": "pathfinder-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "fastify": "^3.27.2",
+    "fastify-cors": "^6.0.3",
+    "lodash": "^4.17.21",
+    "query-string": "^7.1.1"
+  }
+}
