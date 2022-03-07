@@ -1,9 +1,9 @@
 const fastify = require("fastify")({ logger: false });
-const _ = require("lodash");
 const axios = require("axios");
 const qs = require("query-string");
-// const network = require("./data/network-5km.json");
 const network = require("./data/5km-linestring.json");
+
+const { PORT, SEA_ROUTE_URL } = process.env;
 
 fastify.register(require("fastify-cors"), {
   // put your options here
@@ -25,11 +25,9 @@ fastify.get("/", async (request, reply) => {
     opos: opos || "103.7, 1.33333",
     dpos: dpos || "106.718, 10.7587",
   };
-  const url = `http://139.59.193.83/seaws?${qs.stringify(submit)}`;
-  console.log("sending", url);
+  const url = `${SEA_ROUTE_URL}/seaws?${qs.stringify(submit)}`;
   try {
     const { data } = await axios(url);
-    console.log("result is", data);
     return data;
   } catch (error) {
     return {
@@ -41,7 +39,7 @@ fastify.get("/", async (request, reply) => {
 // Run the server!
 const start = async () => {
   try {
-    await fastify.listen(3123);
+    await fastify.listen(PORT || 3000);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
