@@ -1,9 +1,8 @@
 import fastify from "fastify";
 import axios from "axios";
 import qs from "query-string";
-import network from "./data/5km-linestring.json";
 
-import { RouteQuery } from "./Types";
+import { NetworkParams, RouteQuery } from "./Types";
 
 const { PORT, SEA_ROUTE_URL } = process.env;
 
@@ -18,10 +17,39 @@ server.register(require("fastify-cors"), {
 });
 
 /**
- * This endpoint simply returns the network json file
+ * This endpoint returns the network json file based on the requested resoluton
+ * @params {number} res - either one of 5, 10, 20, 50
+ * return json/geojson
  */
-server.get("/network", async () => {
-  return network;
+const schema = {
+  params: {
+    type: "object",
+    additionalProperties: false,
+    required: ["res"],
+    properties: { res: { type: "number" } },
+  },
+};
+server.get<{
+  Params: NetworkParams;
+}>("/network/:res", { schema }, async (request, reply) => {
+  const { params } = request;
+  try {
+    console.log(`Retrieving ${params.res}km file.`);
+    const network = require(`./data/network-${params.res}km-linestring.json`);
+    return network;
+  } catch (error) {
+    reply.code(404).send({ message: "Not Found" });
+  }
+});
+
+server.get("/network", async (request, reply) => {
+  try {
+    console.log(`Retrieving 50km file.`);
+    const network = require(`./data/network-50km-linestring.json`);
+    return network;
+  } catch (error) {
+    reply.code(404).send({ message: "Not Found" });
+  }
 });
 
 /**

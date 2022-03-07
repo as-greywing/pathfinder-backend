@@ -11,3 +11,8 @@ yarn global add env-cmd nodemon
 
 3. Setup ENV Variable
 Duplicate `.env.example` to `.env.local`
+
+4. Start server
+```
+yarn start
+```

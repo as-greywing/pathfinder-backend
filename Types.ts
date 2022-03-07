@@ -7,4 +7,8 @@ interface RouteQuery {
   dpos: String;
 }
 
-export { RouteQuery };
+interface NetworkParams {
+  res: 5 | 10 | 20 | 50
+}
+
+export { RouteQuery, NetworkParams };
