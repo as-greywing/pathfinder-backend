@@ -1,20 +1,29 @@
-const fastify = require("fastify")({ logger: false });
-const axios = require("axios");
-const qs = require("query-string");
-const network = require("./data/5km-linestring.json");
+import fastify from "fastify";
+import axios from "axios";
+import qs from "query-string";
+import network from "./data/5km-linestring.json";
+
+import { RouteQuery } from "./Types";
 
 const { PORT, SEA_ROUTE_URL } = process.env;
 
-fastify.register(require("fastify-cors"), {
+const server = fastify({ logger: false });
+
+server.register(require("fastify-cors"), {
   // put your options here
   origin: true,
 });
 
-fastify.get("/network", async (request, reply) => {
+/**
+ * This endpoint simply returns the network json file
+ */
+server.get("/network", async () => {
   return network;
 });
 
-fastify.get("/", async (request, reply) => {
+server.get<{
+  Querystring: RouteQuery;
+}>("/", async (request, reply) => {
   const { query } = request;
   const { res, suez, panama, nonIRTC, opos, dpos } = query;
   const submit = {
@@ -39,9 +48,9 @@ fastify.get("/", async (request, reply) => {
 // Run the server!
 const start = async () => {
   try {
-    await fastify.listen(PORT || 3000);
+    await server.listen(PORT || 3000);
   } catch (err) {
-    fastify.log.error(err);
+    server.log.error(err);
     process.exit(1);
   }
 };
