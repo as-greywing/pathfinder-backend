@@ -9,6 +9,9 @@ const { PORT, SEA_ROUTE_URL } = process.env;
 
 const server = fastify({ logger: false });
 
+/**
+ * We need CORS to work with frontend!
+ */
 server.register(require("fastify-cors"), {
   // put your options here
   origin: true,
@@ -21,6 +24,9 @@ server.get("/network", async () => {
   return network;
 });
 
+/**
+ * This endpoint parrots the response from the sea route endpoint as the response
+ */
 server.get<{
   Querystring: RouteQuery;
 }>("/", async (request, reply) => {
